@@ -7,6 +7,8 @@ public class PickUpSpawner : MonoBehaviour
 {
     public GameObject ManaCapsule;
     public GameObject hpCapsule;
+    public bool spawnMana;
+    public bool spawnHp;
     public float manaCapsuleInterval = 10f;
     public float hpCapsuleInterval = 20f;
     public float Pointx_1 = 0;
@@ -16,7 +18,9 @@ public class PickUpSpawner : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if(spawnHp==true) 
         StartCoroutine(SpawnHpCapsule());
+        if(spawnMana==true)
         StartCoroutine(SpawnManaCapsule());
     }
 

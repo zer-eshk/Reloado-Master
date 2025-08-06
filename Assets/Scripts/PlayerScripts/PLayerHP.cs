@@ -13,10 +13,12 @@ public class PLayerHP : MonoBehaviour
     public float invincibilitytimer  = 0;
     private SpriteRenderer SpriteRenderer;
     private Color orginalColor;
+    private BoxCollider2D boxCollider;
 
 
     private void Start()
     {
+       
         SpriteRenderer = GetComponent<SpriteRenderer>();
         orginalColor=SpriteRenderer.color;
         curentHp = maxHP;
@@ -28,9 +30,13 @@ public class PLayerHP : MonoBehaviour
         {
             SpriteRenderer.color =Color.red;
             invincibilitytimer -= Time.deltaTime;
+            
         }
         if(invincibilitytimer<=0)
-        { SpriteRenderer.color =orginalColor;}
+        {
+            Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Enemy"), false);
+            SpriteRenderer.color =orginalColor;
+        }
     }
     private void OnCollisionStay2D(Collision2D other)
     
@@ -42,10 +48,10 @@ public class PLayerHP : MonoBehaviour
             if (other != null)
             {
                 
-                invincibilitytimer=invincibilityTime;
+                //invincibilitytimer=invincibilityTime;
                 
                 EnemyHp enemy = other.gameObject.GetComponent<EnemyHp>();
-                TakeDamage(enemy.damageToPlayer);
+                TakeDamage(Mathf.RoundToInt(enemy.damageToPlayer));
             }
         }
        
@@ -59,7 +65,7 @@ public class PLayerHP : MonoBehaviour
             if (other != null)
             {
 
-                invincibilitytimer = invincibilityTime;
+                //invincibilitytimer = invincibilityTime;
 
                 EnemyBullet enemyBullet = other.gameObject.GetComponent<EnemyBullet>();
                 TakeDamage(enemyBullet.bulletDamage);
@@ -69,7 +75,9 @@ public class PLayerHP : MonoBehaviour
     }
     private void TakeDamage(int damage)
     {
-        
+      
+        invincibilitytimer = invincibilityTime;
+        Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Enemy"), true);
         curentHp -=damage;
         if (curentHp <= 0)
         {
